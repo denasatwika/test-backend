@@ -22,11 +22,11 @@ export const up = (pgm) => {
       type: 'INT',
       notNull: true,
     },
-    createAt: {
+    create_at: {
       type: 'TEXT',
       notNull: true,
     },
-    updateAt: {
+    update_at: {
       type: 'TEXT',
       notNull: true,
     },

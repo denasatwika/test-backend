@@ -33,11 +33,11 @@ export const up = (pgm) => {
     duration: {
       type: 'INT',
     },
-    createAt: {
+    create_at: {
       type: 'TEXT',
       notNull: true,
     },
-    updateAt: {
+    update_at: {
       type: 'TEXT',
       notNull: true,
     },

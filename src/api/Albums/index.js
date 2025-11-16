@@ -5,13 +5,22 @@ import DeleteAlbum from './handlerAlbum/deleteAlbum';
 import routes from './route';
 
 export default {
-  name: 'notes',
+  name: 'albums',
   version: '1.0.0',
   register: async (server, { service, validator }) => {
     const postAlbum = new PostAlbum(service, validator);
     const getAlbum = new GetAlbumById(service);
     const editAlbum = new EditAlbum(service, validator);
     const deleteAlbum = new DeleteAlbum(service);
-    server.route(routes(postAlbum, getAlbum, editAlbum, deleteAlbum));
+
+    const albumsHandlers = {
+      postAlbumHandler: postAlbum.postAlbumHandler,
+      getAlbumByIdHandler: getAlbum.getAlbumByIdHandler,
+      editAlbumByIdHandler: editAlbum.editAlbumByIdHandler,
+      deleteAlbumByIdHandler: deleteAlbum.deleteAlbumByIdHandler,
+    };
+
+    server.route(routes(albumsHandlers));
   },
+
 };

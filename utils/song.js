@@ -1,12 +1,12 @@
 const mapDbSongtoModel = ({
   id,
-  name,
+  title,
   year,
   create_at,
   update_at,
 }) => ({
   id,
-  name,
+  title,
   year,
   createAt: create_at,
   updateAt: update_at,

@@ -14,6 +14,15 @@ export default {
     const getSongById = new GetSongById(service);
     const editSong = new EditSong(service, validator);
     const deleteSong = new DeleteSong(service);
-    server.route(routes(postSong, getSong, getSongById, editSong, deleteSong));
+
+    const songsHandlers = {
+      postSongHandler: postSong.postSongHandler,
+      getSongsHandler: getSong.getSongsHandler,
+      getSongByIdHandler: getSongById.getSongsByIdHandler,
+      editSongByIdHandler: editSong.editSongByIdHandler,
+      deleteSongByIdHandler: deleteSong.deleteSongByIdHandler,
+    };
+
+    server.route(routes(songsHandlers));
   },
 };

@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid';
 import { Pool } from 'pg';
-import mapDbSongtoModel from '../../../utils/album';
+import mapDbSongtoModel from '../../../utils/song';
 import InvariantError from '../../exceptions/InvariantError';
 import NotFoundError from '../../exceptions/NotFoundError';
 
@@ -17,7 +17,7 @@ class SongService {
     const updateAt = createAt;
 
     const query = {
-      text: 'INSERT INTO albums (id, title, year, genre, performer, duration, "createAt", "updateAt", albumId) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id',
+      text: 'INSERT INTO songs (id, title, year, genre, performer, duration, "createAt", "updateAt", albumId) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id',
       values: [id, title, year, genre, performer, duration, createAt, updateAt, albumId],
     };
 

@@ -3,9 +3,11 @@ import 'dotenv/config';
 import Hapi from '@hapi/hapi';
 import AlbumService from './services/inMemory/albumService';
 import SongService from './services/inMemory/songService';
+import ClientError from './exceptions/ClientError';
 import AlbumValidator from './validator/albums';
 import SongValidator from './validator/songs';
-import ClientError from './exceptions/ClientError';
+import Albums from './api/Albums';
+import Songs from './api/Songs';
 
 const init = async () => {
   const albumService = new AlbumService();
@@ -21,13 +23,22 @@ const init = async () => {
     },
   });
 
-  await server.register({
-    plugin: notes,
-    options: {
-      service: { albumService, songService },
-      validator: { AlbumValidator, SongValidator },
+  await server.register([
+    {
+      plugin: Albums,
+      options: {
+        service: AlbumService,
+        validator: AlbumValidator,
+      },
     },
-  });
+    {
+      plugin: Songs,
+      options: {
+        service: SongService,
+        validator: SongValidator,
+      },
+    },
+  ]);
 
   server.ext('onPreResponse', (request, h) => {
     const { response } = request;
