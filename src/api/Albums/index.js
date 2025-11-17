@@ -1,8 +1,8 @@
-import PostAlbum from './handlerAlbum/postAlbum';
-import GetAlbumById from './handlerAlbum/getAlbum';
-import EditAlbum from './handlerAlbum/editAlbum';
-import DeleteAlbum from './handlerAlbum/deleteAlbum';
-import routes from './route';
+import PostAlbum from './handlerAlbum/postAlbum.js';
+import GetAlbumById from './handlerAlbum/getAlbum.js';
+import EditAlbum from './handlerAlbum/editAlbum.js';
+import DeleteAlbum from './handlerAlbum/deleteAlbum.js';
+import routes from './route.js';
 
 export default {
   name: 'albums',

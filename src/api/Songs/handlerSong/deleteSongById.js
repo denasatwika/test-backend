@@ -5,7 +5,7 @@ class DeleteSong {
     this.deleteSongByIdHandler = this.deleteSongByIdHandler.bind(this);
   }
 
-  async deleteSongsByIdHandler(request) {
+  async deleteSongByIdHandler(request) {
     const { id } = request.params;
 
     await this.service.deleteSongById(id);

@@ -5,8 +5,9 @@ class GetSong {
     this.getSongsHandler = this.getSongsHandler.bind(this);
   }
 
-  async getSongsHandler() {
-    const songs = await this.service.getAllSongs();
+  async getSongsHandler(request) {
+    const { title, performer } = request.query;
+    const songs = await this.service.getAllSongs({ title, performer });
 
     return {
       status: 'success',

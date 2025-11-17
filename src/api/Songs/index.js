@@ -1,9 +1,9 @@
-import PostSong from './handlerSong/postSong';
-import GetSong from './handlerSong/getSong';
-import GetSongById from './handlerSong/getSongById';
-import EditSong from './handlerSong/editSongById';
-import DeleteSong from './handlerSong/deleteSongById';
-import routes from './route';
+import PostSong from './handlerSong/postSong.js';
+import GetSong from './handlerSong/getSong.js';
+import GetSongById from './handlerSong/getSongById.js';
+import EditSong from './handlerSong/editSongById.js';
+import DeleteSong from './handlerSong/deleteSongById.js';
+import routes from './route.js';
 
 export default {
   name: 'songs',
@@ -18,7 +18,7 @@ export default {
     const songsHandlers = {
       postSongHandler: postSong.postSongHandler,
       getSongsHandler: getSong.getSongsHandler,
-      getSongByIdHandler: getSongById.getSongsByIdHandler,
+      getSongByIdHandler: getSongById.getSongByIdHandler,
       editSongByIdHandler: editSong.editSongByIdHandler,
       deleteSongByIdHandler: deleteSong.deleteSongByIdHandler,
     };

@@ -1,5 +1,5 @@
-import InvariantError from '../../exceptions/InvariantError';
-import SongSchema from './schema';
+import InvariantError from '../../exceptions/InvariantError.js';
+import SongSchema from './schema.js';
 
 const SongValidator = {
   validateSongPayload: (payload) => {

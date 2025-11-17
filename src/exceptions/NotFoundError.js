@@ -1,8 +1,8 @@
-import ClientError from './ClientError';
+import ClientError from './ClientError.js';
 
 class NotFoundError extends ClientError {
   constructor(message) { // default statusCod sudah otomatis 400 dri warisan ClientError
-    super(message, 400);
+    super(message, 404);
     this.name = 'NotFoundError';
   }
 }

@@ -1,4 +1,4 @@
-import ClientError from './ClientError';
+import ClientError from './ClientError.js';
 
 class InvariantError extends ClientError {
   constructor(message) { // default statusCod sudah otomatis 400 dri warisan ClientError

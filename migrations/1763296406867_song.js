@@ -41,7 +41,7 @@ export const up = (pgm) => {
       type: 'TEXT',
       notNull: true,
     },
-    albumId: {
+    album_id: {
       type: 'VARCHAR(50)',
       references: '"albums"',
       onDelete: 'SET NULL',

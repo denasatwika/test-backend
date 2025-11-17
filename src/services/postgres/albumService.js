@@ -1,8 +1,8 @@
 import { nanoid } from 'nanoid';
 import { Pool } from 'pg';
-import mapDbAlbumtoModel from '../../../utils/album';
-import InvariantError from '../../exceptions/InvariantError';
-import NotFoundError from '../../exceptions/NotFoundError';
+import mapDbAlbumtoModel from '../../../utils/album.js';
+import InvariantError from '../../exceptions/InvariantError.js';
+import NotFoundError from '../../exceptions/NotFoundError.js';
 
 class AlbumService {
   constructor() {
@@ -15,7 +15,7 @@ class AlbumService {
     const updateAt = createAt;
 
     const query = {
-      text: 'INSERT INTO albums (id, name, year, "createAt", "updateAt") VALUES($1, $2, $3, $4, $5) RETURNING id',
+      text: 'INSERT INTO albums (id, name, year, create_at, update_at) VALUES($1, $2, $3, $4, $5) RETURNING id',
       values: [id, name, year, createAt, updateAt],
     };
 
@@ -39,14 +39,25 @@ class AlbumService {
     if (result.rowCount === 0) {
       throw new NotFoundError('Album tidak ditemukan');
     }
-    return result.rows.map(mapDbAlbumtoModel)[0];
+
+    const songList = {
+      text: 'SELECT id, title, performer FROM songs WHERE album_id = $1',
+      values: [id],
+    };
+
+    const resultSong = await this.pool.query(songList);
+
+    const album = result.rows.map(mapDbAlbumtoModel)[0];
+    album.songs = resultSong.rows;
+
+    return album;
   }
 
   async editAlbumById(id, { name, year }) {
     const updateAt = new Date().toISOString();
 
     const query = {
-      text: 'UPDATE albums SET name = $1, year = $2, "updateAt" = $3 WHERE id = $4 RETURNING id',
+      text: 'UPDATE albums SET name = $1, year = $2, update_at = $3 WHERE id = $4 RETURNING id',
       values: [name, year, updateAt, id],
     };
     const result = await this.pool.query(query);

@@ -2,10 +2,10 @@ class GetSongById {
   constructor(service) {
     this.service = service;
 
-    this.getSongsByIdHandler = this.getSongsByIdHandler.bind(this);
+    this.getSongByIdHandler = this.getSongByIdHandler.bind(this);
   }
 
-  async getSongsByIdHandler(request) {
+  async getSongByIdHandler(request) {
     const { id } = request.params;
 
     const song = await this.service.getSongById(id);

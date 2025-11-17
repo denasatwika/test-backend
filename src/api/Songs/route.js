@@ -6,13 +6,13 @@ const routes = (handler) => [
   },
   {
     method: 'GET',
-    path: '/songs/',
+    path: '/songs',
     handler: handler.getSongsHandler, // getNoteByIdHandler mengembalikan "satu" note.
   },
   {
     method: 'GET',
     path: '/songs/{id}',
-    handler: handler.getSongsByIdHandler, // getNoteByIdHandler mengembalikan "satu" note.
+    handler: handler.getSongByIdHandler, // getNoteByIdHandler mengembalikan "satu" note.
   },
   {
     method: 'PUT',
@@ -22,7 +22,7 @@ const routes = (handler) => [
   {
     method: 'DELETE',
     path: '/songs/{id}',
-    handler: handler.deleteSongsByIdHandler,
+    handler: handler.deleteSongByIdHandler,
   },
 ];
 

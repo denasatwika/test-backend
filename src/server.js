@@ -1,13 +1,13 @@
 import 'dotenv/config';
 
 import Hapi from '@hapi/hapi';
-import AlbumService from './services/inMemory/albumService';
-import SongService from './services/inMemory/songService';
-import ClientError from './exceptions/ClientError';
-import AlbumValidator from './validator/albums';
-import SongValidator from './validator/songs';
-import Albums from './api/Albums';
-import Songs from './api/Songs';
+import AlbumService from './services/postgres/albumService.js';
+import SongService from './services/postgres/songService.js';
+import ClientError from './exceptions/ClientError.js';
+import AlbumValidator from './validator/albums/index.js';
+import SongValidator from './validator/songs/index.js';
+import Albums from './api/Albums/index.js';
+import Songs from './api/Songs/index.js';
 
 const init = async () => {
   const albumService = new AlbumService();
@@ -27,14 +27,14 @@ const init = async () => {
     {
       plugin: Albums,
       options: {
-        service: AlbumService,
+        service: albumService,
         validator: AlbumValidator,
       },
     },
     {
       plugin: Songs,
       options: {
-        service: SongService,
+        service: songService,
         validator: SongValidator,
       },
     },

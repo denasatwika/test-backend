@@ -6,7 +6,7 @@ class PostSong {
     this.postSongHandler = this.postSongHandler.bind(this);
   }
 
-  async postSongHandler(request) {
+  async postSongHandler(request, h) {
     this.validator.validateSongPayload(request.payload);
     const {
       title = 'untitled', year, genre, performer, duration, albumId,
@@ -16,7 +16,7 @@ class PostSong {
       title, year, genre, performer, duration, albumId,
     });
 
-    const response = response({
+    const response = h.response({
       status: 'success',
       message: 'Lagu berhasil ditambahkan',
       data: {

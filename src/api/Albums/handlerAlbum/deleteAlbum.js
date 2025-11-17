@@ -2,7 +2,7 @@ class DeleteAlbum {
   constructor(service) {
     this.service = service;
 
-    this.getAlbumByIdHandler = this.getAlbumByIdHandler.bind(this);
+    this.deleteAlbumByIdHandler = this.deleteAlbumByIdHandler.bind(this);
   }
 
   async deleteAlbumByIdHandler(request) {
