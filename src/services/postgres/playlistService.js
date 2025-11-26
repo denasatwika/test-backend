@@ -25,7 +25,7 @@ class PlayListService {
 
   async getPlaylist(owner) {
     const query = {
-      text: `SELECT playlists.id, playlist.name, users.username FROM playlists
+      text: `SELECT playlists.id, playlists.name, users.username FROM playlists
                LEFT JOIN users ON users.id = playlist.owner
                WHERE playlists.owner = $1`,
       values: [owner],
@@ -50,7 +50,7 @@ class PlayListService {
     const id = `playlist-${nanoid(16)}`;
 
     const query = {
-      text: 'INSERT INTO playlists_songs VALUES($1, $2, $3) RETURNING id',
+      text: 'INSERT INTO playlist_songs VALUES($1, $2, $3) RETURNING id',
       values: [id, playlistId, songId],
     };
     const result = await this.pool.query(query);
@@ -62,7 +62,7 @@ class PlayListService {
 
   async getSongsInPlaylist(playlistId) {
     const query = {
-      text: `SELECT playlists.id, playlist.name, users.username, FROM playlists
+      text: `SELECT playlists.id, playlists.name, users.username, FROM playlists
                LEFT JOIN users ON users.id = playlists.owner
                WHERE playlists.id = $1`,
       values: [playlistId],
@@ -75,7 +75,7 @@ class PlayListService {
 
     const querySongs = {
       text: `SELECT songs.id, songs.title, songs.performer FROM songs
-               JOIN playlist_songs ON songs.id = playlist_songs.songs_id
+               JOIN playlist_songs ON songs.id = playlist_songs.song_id
                WHERE playlist_songs.playlist.id = $1`,
       values: [playlistId],
     };
@@ -86,7 +86,7 @@ class PlayListService {
 
   async deleteSongsfromPlaylist(playlistId, songId) {
     const query = {
-      text: 'DELETE FROM playlist_songs WHERE playlist_id = $1 AND song_id = 2 RETURNING id',
+      text: 'DELETE FROM playlist_songs WHERE playlist_id = $1 AND song_id = $2 RETURNING id',
       values: [playlistId, songId],
     };
     const result = await this.pool.query(query);
