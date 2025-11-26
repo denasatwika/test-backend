@@ -12,7 +12,7 @@ class PlaylistsHandler {
   }
 
   async postPlaylistHandler(request, h) {
-    this.validator.validatePostPlaylistPayload(request.payload);
+    this.validator.PostPlayListPayloadSchema(request.payload);
     const { name } = request.payload;
     const { id: credentialId } = request.auth.credentials;
 
@@ -50,7 +50,7 @@ class PlaylistsHandler {
   }
 
   async postSongToPlaylistHandler(request, h) {
-    this.validator.validatePostSongToPlaylistPayload(request.payload);
+    this.validator.PostSongtoPlaylistValidator(request.payload);
     const { id } = request.params;
     const { songId } = request.payload;
     const { id: credentialId } = request.auth.credentials;
@@ -81,7 +81,7 @@ class PlaylistsHandler {
   }
 
   async deleteSongFromPlaylistHandler(request) {
-    this.validator.validatePostSongToPlaylistPayload(request.payload);
+    this.validator.PostSongtoPlaylistValidator(request.payload);
     const { id } = request.params;
     const { songId } = request.payload;
     const { id: credentialId } = request.auth.credentials;

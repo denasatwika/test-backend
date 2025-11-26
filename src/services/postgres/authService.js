@@ -3,7 +3,7 @@ import { Pool } from 'pg';
 import bcrypt from 'bcrypt';
 import InvariantError from '../../exceptions/InvariantError.js';
 import NotFoundError from '../../exceptions/NotFoundError.js';
-import { mapDbUserToModel } from '../../utils/mapDbToModel.js';
+import mapDbUserToModel from '../../../utils/user.js';
 import AuthenticationError from '../../exceptions/AuthenticationError.js';
 
 class UserService {

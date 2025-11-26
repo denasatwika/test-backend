@@ -8,7 +8,7 @@ import {
 import InvariantError from '../../exceptions/InvariantError.js';
 
 const AuthenticationsValidator = {
-  UserSchema: (payload) => {
+  validateUserPayload: (payload) => {
     const validationResult = UserSchema.validate(payload);
     if (validationResult.error) {
       throw new InvariantError(validationResult.error.message);

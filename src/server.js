@@ -2,6 +2,9 @@ import 'dotenv/config';
 import Hapi from '@hapi/hapi';
 import Jwt from '@hapi/jwt';
 
+import CollaborationsValidator from './validator/collaborations/index.js';
+import Collaborations from './api/Collaborations/index.js';
+
 import PlaylistService from './services/postgres/playlistService.js';
 import PlaylistValidator from './validator/playlist/index.js';
 import Playlists from './api/Playlists/index.js';
@@ -22,7 +25,8 @@ import Albums from './api/Albums/index.js';
 import Songs from './api/Songs/index.js';
 
 const init = async () => {
-  const playlistService = new PlaylistService();
+  const collaborationsService = new CollaborationsService();
+  const playlistService = new PlaylistService(collaborationsService);
   const albumService = new AlbumService();
   const songService = new SongService();
   const authService = new AuthService();
@@ -87,6 +91,14 @@ const init = async () => {
         authService,
         tokenManager: TokenManager,
         validator: AuthValidator,
+      },
+    },
+    {
+      plugin: Collaborations,
+      options: {
+        collaborationsService,
+        playlistsService: playlistService,
+        validator: CollaborationsValidator,
       },
     },
   ]);

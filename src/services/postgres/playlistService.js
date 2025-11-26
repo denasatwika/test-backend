@@ -5,8 +5,9 @@ import InvariantError from '../../exceptions/InvariantError.js';
 import NotFoundError from '../../exceptions/NotFoundError.js';
 
 class PlayListService {
-  constructor() {
+  constructor(collaborationService) {
     this.pool = new Pool();
+    this.collaborationService = collaborationService;
   }
 
   async addPlaylist({ name, owner }) {
@@ -26,8 +27,10 @@ class PlayListService {
   async getPlaylists(owner) {
     const query = {
       text: `SELECT playlists.id, playlists.name, users.username FROM playlists
-               LEFT JOIN users ON users.id = playlists.owner
-               WHERE playlists.owner = $1`,
+             LEFT JOIN users ON users.id = playlists.owner
+             LEFT JOIN collaborations ON collaborations.playlist_id = playlists.id
+             WHERE playlists.owner = $1 OR collaborations.user_id = $1
+             GROUP BY playlists.id, users.username`,
       values: [owner],
     };
     const result = await this.pool.query(query);
@@ -63,8 +66,8 @@ class PlayListService {
   async getSongsInPlaylist(playlistId) {
     const query = {
       text: `SELECT playlists.id, playlists.name, users.username FROM playlists
-               LEFT JOIN users ON users.id = playlists.owner
-               WHERE playlists.id = $1`,
+             LEFT JOIN users ON users.id = playlists.owner
+             WHERE playlists.id = $1`,
       values: [playlistId],
     };
     const result = await this.pool.query(query);
@@ -75,8 +78,8 @@ class PlayListService {
 
     const querySongs = {
       text: `SELECT songs.id, songs.title, songs.performer FROM songs
-               JOIN playlist_songs ON songs.id = playlist_songs.song_id
-               WHERE playlist_songs.playlist_id = $1`,
+             JOIN playlist_songs ON songs.id = playlist_songs.song_id
+             WHERE playlist_songs.playlist_id = $1`,
       values: [playlistId],
     };
     const resultSongs = await this.pool.query(querySongs);
@@ -84,7 +87,7 @@ class PlayListService {
     return { ...result.rows[0], songs: resultSongs.rows };
   }
 
-  async deleteSongfromPlaylist(playlistId, songId) {
+  async deleteSongFromPlaylist(playlistId, songId) {
     const query = {
       text: 'DELETE FROM playlist_songs WHERE playlist_id = $1 AND song_id = $2 RETURNING id',
       values: [playlistId, songId],
@@ -98,7 +101,7 @@ class PlayListService {
 
   async ownerPlaylist(id, owner) {
     const query = {
-      text: 'SELECT owner FROM playlists WHERE id = $1',
+      text: 'SELECT * FROM playlists WHERE id = $1',
       values: [id],
     };
 
@@ -123,6 +126,21 @@ class PlayListService {
 
     if (!result.rowCount) {
       throw new NotFoundError('Lagu tidak ditemukan');
+    }
+  }
+
+  async verifyPlaylistAccess(playlistId, userId) {
+    try {
+      await this.verifyPlaylistOwner(playlistId, userId);
+    } catch (error) {
+      if (error instanceof NotFoundError) {
+        throw error;
+      }
+      try {
+        await this.collaborationService.verifyCollaborator(playlistId, userId);
+      } catch {
+        throw new AuthorizationError('Anda tidak berhak mengakses resource ini');
+      }
     }
   }
 }

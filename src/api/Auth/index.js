@@ -5,9 +5,9 @@ import AuthenticationHandler from './handlerAuth/authHandler.js';
 export default {
   name: 'Authentications',
   version: '1.0.0',
-  register: async (server, { authService, TokenManager, validator }) => {
+  register: async (server, { authService, tokenManager, validator }) => {
     const postUserHandler = new UsersHandler(authService, validator);
-    const authenticationHandler = new AuthenticationHandler(authService, TokenManager, validator);
+    const authenticationHandler = new AuthenticationHandler(authService, tokenManager, validator);
 
     const authHandler = {
       postUserHandler: postUserHandler.postUserHandler,
