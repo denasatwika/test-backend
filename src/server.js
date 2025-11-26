@@ -1,17 +1,31 @@
 import 'dotenv/config';
-
 import Hapi from '@hapi/hapi';
+import Jwt from '@hapi/jwt';
+
+import PlaylistService from './services/postgres/playlistService.js';
+import PlaylistValidator from './validator/playlist/index.js';
+import Playlists from './api/Playlists/index.js';
+
 import AlbumService from './services/postgres/albumService.js';
 import SongService from './services/postgres/songService.js';
+import AuthService from './services/postgres/authService.js';
+
 import ClientError from './exceptions/ClientError.js';
+import TokenManager from './tokenize/TokenManager.js';
+
 import AlbumValidator from './validator/albums/index.js';
 import SongValidator from './validator/songs/index.js';
+import AuthValidator from './validator/auth/index.js';
+
+import Authentications from './api/Auth/index.js';
 import Albums from './api/Albums/index.js';
 import Songs from './api/Songs/index.js';
 
 const init = async () => {
+  const playlistService = new PlaylistService();
   const albumService = new AlbumService();
   const songService = new SongService();
+  const authService = new AuthService();
 
   const server = Hapi.server({
     port: process.env.PORT || 5000,
@@ -24,6 +38,35 @@ const init = async () => {
   });
 
   await server.register([
+    {
+      plugin: Jwt,
+    },
+  ]);
+
+  server.auth.strategy('openmusic_jwt', 'jwt', {
+    keys: process.env.ACCESS_TOKEN_KEY,
+    verify: {
+      aud: false,
+      iss: false,
+      sub: false,
+      maxAgeSec: 3600,
+    },
+    validate: (artifacts) => ({
+      isValid: true,
+      credentials: {
+        id: artifacts.decoded.payload.id,
+      },
+    }),
+  });
+
+  await server.register([
+    {
+      plugin: Playlists,
+      options: {
+        service: playlistService,
+        validator: PlaylistValidator,
+      },
+    },
     {
       plugin: Albums,
       options: {
@@ -38,6 +81,14 @@ const init = async () => {
         validator: SongValidator,
       },
     },
+    {
+      plugin: Authentications,
+      options: {
+        authService,
+        tokenManager: TokenManager,
+        validator: AuthValidator,
+      },
+    },
   ]);
 
   server.ext('onPreResponse', (request, h) => {
@@ -49,6 +100,16 @@ const init = async () => {
         message: response.message,
       });
       newResponse.code(response.statusCode);
+      return newResponse;
+    }
+
+    if (response.isServer) {
+      console.error(response);
+      const newResponse = h.response({
+        status: 'error',
+        message: 'Maaf, terjadi kegagalan pada server kami.',
+      });
+      newResponse.code(500);
       return newResponse;
     }
 
