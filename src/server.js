@@ -3,6 +3,7 @@ import Hapi from '@hapi/hapi';
 import Jwt from '@hapi/jwt';
 
 import CollaborationsValidator from './validator/collaborations/index.js';
+import CollaborationsService from './services/postgres/colaborationService.js';
 import Collaborations from './api/Collaborations/index.js';
 
 import PlaylistService from './services/postgres/playlistService.js';
@@ -99,6 +100,7 @@ const init = async () => {
         collaborationsService,
         playlistsService: playlistService,
         validator: CollaborationsValidator,
+        userService: authService,
       },
     },
   ]);
